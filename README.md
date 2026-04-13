@@ -31,20 +31,6 @@ branchyard done --all          Remove all active worktrees at once
 branchyard init                Configure this workspace (creates .wtree.yml)
 ```
 
-## Install
-
-```bash
-# macOS via Homebrew
-brew tap <your-tap>/tap
-brew install branchyard
-
-# Any platform (curl installer)
-curl -fsSL https://github.com/<your-org>/branchyard/releases/latest/download/install.sh | sh
-
-# Via cargo
-cargo install branchyard
-```
-
 ## Setup
 
 Run `branchyard init` in the root of your workspace (the directory that contains your repos).
@@ -116,8 +102,8 @@ Use these placeholders in `commands.serve`, `commands.setup`, and `hooks`:
 |---|---|
 | `{slug}` | Worktree name (e.g. `auth-jwt`) |
 | `{port}` | This repo's assigned port |
-| `{<name>_port}` | Port of repo named `<name>` (e.g. `{backend_port}`) |
-| `{<name>_port}` | Port of service named `<name>` (e.g. `{postgres_port}`, `{redis_port}`) |
+| `{workspace}` | Absolute path to the workspace root (where `.wtree.yml` lives) |
+| `{<name>_port}` | Port of any repo or service named `<name>` (e.g. `{backend_port}`, `{postgres_port}`) |
 
 ---
 
