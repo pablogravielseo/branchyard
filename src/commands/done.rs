@@ -10,11 +10,17 @@ use std::path::Path;
 
 /// Kill all processes whose working directory is inside the worktree directory.
 /// Uses `lsof` to find processes by cwd — works on macOS and Linux.
+/// Also stops Watchman watches on the directory to avoid getcwd errors.
 fn kill_processes_in_dir(slug_dir: &Path) {
     let dir_str = match slug_dir.to_str() {
         Some(s) => s,
         None => return,
     };
+
+    // Stop Watchman from watching this directory before removing it
+    let _ = std::process::Command::new("watchman")
+        .args(["watch-del", dir_str])
+        .output();
 
     // lsof -t -a +d <dir> lists PIDs of processes with cwd inside dir
     let output = std::process::Command::new("lsof")
