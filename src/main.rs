@@ -23,7 +23,7 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Configure branchyard for this workspace (creates .wtree.yml)
+    /// Configure branchyard for this workspace (creates .branchyard.yml)
     Init,
 
     /// Create paired worktrees for a feature

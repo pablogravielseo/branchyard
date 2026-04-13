@@ -1,0 +1,87 @@
+# example.branchyard.yml
+#
+# Place this file (renamed to .branchyard.yml) in the root of your workspace —
+# the directory that contains all your repos.
+#
+# Run `branchyard init` to generate one interactively, or copy this file and edit manually.
+
+base_branch: main          # branch that new worktrees are created from
+worktrees_dir: ./worktrees # where branchyard creates the worktree directories
+
+# ── Repositories ──────────────────────────────────────────────────────────────
+#
+# One entry per repo. Each gets its own git worktree and an isolated port.
+# Available placeholders: {slug}, {port}, {workspace}, {<name>_port}
+
+repos:
+  - name: frontend
+    path: ./my-frontend
+    commands:
+      serve: "npm run dev -- --port {port}"
+      setup: "npm ci"                          # runs once on `branchyard new`
+
+  - name: backend
+    path: ./my-backend
+    commands:
+      serve: "bundle exec rails server -p {port}"
+      setup: "bundle exec rails db:create db:migrate"
+    setup:
+      symlinks:
+        - from: ./my-backend/node_modules      # path relative to workspace root
+          to: node_modules                     # path relative to the repo worktree
+
+# ── Ports ──────────────────────────────────────────────────────────────────────
+#
+# Each worktree gets a slot (0, 1, 2...). Ports are offset by 10 per slot.
+# With base 3000 and 2 repos: slot 0 → 3000, 3001 | slot 1 → 3010, 3011
+
+ports:
+  base: 3000
+
+# ── Docker services ────────────────────────────────────────────────────────────
+#
+# Each service gets an isolated container name and host port per worktree.
+# Container names are prefixed by slug (e.g. auth-jwt-postgres, auth-jwt-redis).
+
+services:
+  - name: postgres
+    image: postgres:16
+    port: 5432                                 # container port; host port assigned per slot
+    environment:
+      - POSTGRES_PASSWORD=postgres
+
+  - name: redis
+    image: redis:7
+    port: 6379
+
+  # Full example with all available fields:
+  - name: app
+    image: my-app:latest
+    port: 3000
+    command: "bundle exec rails s -p 3000 -b 0.0.0.0"
+    env_file: ./my-backend/.env                # resolved relative to workspace root
+    volumes:
+      - bundle_cache:/usr/local/bundle
+    depends_on:
+      - postgres
+      - redis
+    platform: linux/amd64                      # optional, for cross-platform images
+
+# ── Terminal ───────────────────────────────────────────────────────────────────
+#
+# Opens a pre-configured session with one tab/window per repo on `branchyard new`.
+# Options: warp | iterm2 | tmux | ghostty | none (default: none)
+
+terminal:
+  multiplexer: none
+
+# ── Hooks ──────────────────────────────────────────────────────────────────────
+#
+# Shell commands that run after `branchyard new` and `branchyard done`.
+# Supports the same placeholders as repo commands.
+
+hooks:
+  after_new:
+    - "echo 'Worktree {slug} is ready on port {port}'"
+  after_done:
+    - "echo 'Worktree {slug} removed'"

@@ -28,20 +28,27 @@ branchyard stop auth-jwt       Stop services
 branchyard list                List active worktrees with ports
 branchyard done auth-jwt       Remove worktree, containers, and branches
 branchyard done --all          Remove all active worktrees at once
-branchyard init                Configure this workspace (creates .wtree.yml)
+branchyard init                Configure this workspace (creates .branchyard.yml)
 ```
 
 ## Setup
 
-Run `branchyard init` in the root of your workspace (the directory that contains your repos).
+Branchyard is stack-agnostic. It adapts to any project through a single configuration file — `.branchyard.yml` — that lives in your workspace root (the directory that contains all your repos). This file declares your repositories, Docker services, ports, and terminal integration. Branchyard reads it at runtime to know what to create, start, and tear down.
 
-The wizard asks for repos, serve commands, Docker services, and port base. It creates `.wtree.yml`.
+Run `branchyard init` to generate it interactively:
 
-**Edit the file manually** to add symlinks, one-time setup commands, or hooks.
+```bash
+cd ~/projects/my-workspace   # the directory that contains your repos
+branchyard init
+```
+
+The wizard asks for repos, serve commands, Docker services, and port base. It creates `.branchyard.yml`.
+
+**Edit the file manually** to add symlinks, one-time setup commands, or hooks. See `example.branchyard.yml` in this repo for a full reference.
 
 ---
 
-## Configuration reference (`.wtree.yml`)
+## Configuration reference (`.branchyard.yml`)
 
 ```yaml
 base_branch: main
@@ -102,7 +109,7 @@ Use these placeholders in `commands.serve`, `commands.setup`, and `hooks`:
 |---|---|
 | `{slug}` | Worktree name (e.g. `auth-jwt`) |
 | `{port}` | This repo's assigned port |
-| `{workspace}` | Absolute path to the workspace root (where `.wtree.yml` lives) |
+| `{workspace}` | Absolute path to the workspace root (where `.branchyard.yml` lives) |
 | `{<name>_port}` | Port of any repo or service named `<name>` (e.g. `{backend_port}`, `{postgres_port}`) |
 
 ---

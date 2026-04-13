@@ -1,7 +1,7 @@
 //! Terminal integration layer.
 //!
 //! branchyard can open a pre-configured terminal session on `branchyard new` and clean
-//! it up on `branchyard done`. The specific terminal is declared in .wtree.yml:
+//! it up on `branchyard done`. The specific terminal is declared in .branchyard.yml:
 //!
 //! ```yaml
 //! terminal:

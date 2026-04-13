@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::fs;
 use std::path::{Path, PathBuf};
 
-pub const CONFIG_FILE: &str = ".wtree.yml";
+pub const CONFIG_FILE: &str = ".branchyard.yml";
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WtreeConfig {
@@ -55,7 +55,7 @@ pub struct RepoCommands {
 #[derive(Debug, Serialize, Deserialize, Clone, Default)]
 pub struct SetupConfig {
     /// Symlinks to create inside the worktree on `branchyard new`.
-    /// `from` — path relative to the workspace root (where .wtree.yml lives).
+    /// `from` — path relative to the workspace root (where .branchyard.yml lives).
     /// `to`   — path relative to the repo's worktree directory.
     #[serde(default)]
     pub symlinks: Vec<SymlinkConfig>,
@@ -145,13 +145,13 @@ impl WtreeConfig {
     pub fn load() -> Result<(Self, PathBuf)> {
         let config_path = find_config_file().ok_or_else(|| {
             anyhow::anyhow!(
-                ".wtree.yml not found in this directory or any parent.\n  Run `branchyard init` to configure this workspace."
+                ".branchyard.yml not found in this directory or any parent.\n  Run `branchyard init` to configure this workspace."
             )
         })?;
 
         let workspace_root = config_path
             .parent()
-            .expect(".wtree.yml must have a parent directory")
+            .expect(".branchyard.yml must have a parent directory")
             .to_path_buf()
             .canonicalize()
             .with_context(|| {
@@ -165,7 +165,7 @@ impl WtreeConfig {
             .with_context(|| format!("Failed to read {}", config_path.display()))?;
 
         let config: Self = serde_yaml::from_str(&content)
-            .with_context(|| format!("Invalid .wtree.yml at {}", config_path.display()))?;
+            .with_context(|| format!("Invalid .branchyard.yml at {}", config_path.display()))?;
 
         Ok((config, workspace_root))
     }
