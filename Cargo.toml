@@ -29,3 +29,10 @@ dirs = "5"
 assert_cmd = "2"
 predicates = "3"
 tempfile = "3"
+
+[workspace.metadata.dist]
+cargo-dist-version = "0.22.1"
+ci = "github"
+installers = ["shell"]
+targets = ["aarch64-apple-darwin", "x86_64-apple-darwin", "x86_64-unknown-linux-gnu", "aarch64-unknown-linux-gnu"]
+install-path = "CARGO_HOME"
