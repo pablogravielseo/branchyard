@@ -31,6 +31,29 @@ branchyard done --all          Remove all active worktrees at once
 branchyard init                Configure this workspace (creates .branchyard.yml)
 ```
 
+## Workflow
+
+```bash
+# Once — creates worktrees, runs setup commands, opens terminal
+branchyard new auth-jwt
+
+# Start Docker services and dev servers
+branchyard serve auth-jwt
+
+# Stop Docker services (dev servers stay in terminal tabs — stop them with Ctrl+C)
+branchyard stop auth-jwt
+
+# Start again after a stop
+branchyard serve auth-jwt
+
+# When the feature is done — removes worktrees, containers, and local branches
+branchyard done auth-jwt
+```
+
+`new` runs once per feature. `serve` and `stop` can be used as many times as needed.
+
+---
+
 ## Setup
 
 Branchyard is stack-agnostic. It adapts to any project through a single configuration file — `.branchyard.yml` — that lives in your workspace root (the directory that contains all your repos). This file declares your repositories, Docker services, ports, and terminal integration. Branchyard reads it at runtime to know what to create, start, and tear down.
