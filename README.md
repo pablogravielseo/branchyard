@@ -2,6 +2,25 @@
 
 Paired Git Worktrees CLI — create isolated environments across multiple repos simultaneously.
 
+## The problem
+
+Working on multiple features in parallel across several repositories is painful. The common workaround is switching branches with `git stash` or `git checkout`, but this breaks running processes, resets your database state, and forces you to restart servers every time you context-switch.
+
+A single feature in a typical product stack might span a frontend, a backend API, and a few microservices — all of which need to run simultaneously, on different ports, backed by isolated databases. Setting this up manually for each feature means managing port conflicts, Docker container name collisions, and repeated setup steps across every repo. Done is worse: you have to remember every branch, every container, and every worktree you created.
+
+## How branchyard solves it
+
+Branchyard automates the full lifecycle of a feature environment. You run one command and it:
+
+- Creates a **git worktree** in every configured repo on the same feature branch
+- Runs per-repo **setup commands** (installs, migrations, seed data)
+- Generates a **standalone Docker Compose file** with unique container names and ports, isolated from every other active environment
+- Opens your **terminal multiplexer** (Warp, iTerm2, tmux, Ghostty) with one tab per repo, ready to serve
+
+When the feature ships, `branchyard done` tears down everything — worktrees, containers, and local branches — across all repos in one command.
+
+Port assignment is deterministic: each environment gets a **slot** (0, 1, 2…), and ports are calculated from that slot, so multiple environments never conflict.
+
 ```
 branchyard new auth-jwt        Create paired worktrees for all configured repos
 branchyard serve auth-jwt      Start services (docker compose up + dev servers)
