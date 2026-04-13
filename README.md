@@ -35,11 +35,11 @@ branchyard init                Configure this workspace (creates .wtree.yml)
 
 ```bash
 # macOS via Homebrew
-brew tap pablogravielseo/tap
+brew tap <your-tap>/tap
 brew install branchyard
 
 # Any platform (curl installer)
-curl -fsSL https://github.com/pablogravielseo/branchyard/releases/latest/download/install.sh | sh
+curl -fsSL https://github.com/<your-org>/branchyard/releases/latest/download/install.sh | sh
 
 # Via cargo
 cargo install branchyard
