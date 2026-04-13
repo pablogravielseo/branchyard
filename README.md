@@ -57,6 +57,10 @@ branchyard done auth-jwt
 ## Install
 
 ```bash
+# macOS via Homebrew
+brew tap pablogravielseo/tap
+brew install branchyard
+
 # macOS / Linux (curl installer)
 curl -fsSL https://github.com/pablogravielseo/branchyard/releases/latest/download/install.sh | sh
 
