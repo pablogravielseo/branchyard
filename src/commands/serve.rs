@@ -1,6 +1,7 @@
 use crate::config::WtreeConfig;
 use crate::docker;
 use crate::ports::PortAssignment;
+use crate::terminal;
 use anyhow::Result;
 use owo_colors::OwoColorize;
 
@@ -41,6 +42,9 @@ pub fn run(slug: &str) -> Result<()> {
         docker::up(slug, &slug_dir)?;
         println!("  {} Docker services running.", "✔".green().bold());
     }
+
+    // Open terminal session with serve commands if autostart is enabled
+    terminal::open_if_autostart(slug, &config, &worktrees_base, &ports, &vars)?;
 
     println!("\n{} Serving \"{}\".", "✔".green().bold(), slug.bold());
     Ok(())

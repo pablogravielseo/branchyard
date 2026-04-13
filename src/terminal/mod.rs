@@ -74,6 +74,21 @@ pub fn open(
     Ok(())
 }
 
+/// Open a terminal session only when autostart is enabled.
+/// Used by `branchyard serve` to optionally launch dev servers.
+pub fn open_if_autostart(
+    slug: &str,
+    config: &WtreeConfig,
+    worktree_base: &Path,
+    ports: &PortAssignment,
+    vars: &HashMap<String, String>,
+) -> Result<()> {
+    if config.terminal.autostart {
+        open(slug, config, worktree_base, ports, vars)?;
+    }
+    Ok(())
+}
+
 /// Remove terminal config. No-op if multiplexer is None.
 pub fn remove(slug: &str, config: &WtreeConfig) -> Result<()> {
     if let Some(integration) = resolve(&config.terminal.multiplexer) {

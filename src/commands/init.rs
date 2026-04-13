@@ -148,7 +148,10 @@ pub fn run() -> Result<()> {
         repos,
         ports: PortConfig { base: port_base },
         services,
-        terminal: TerminalConfig { multiplexer },
+        terminal: TerminalConfig {
+            multiplexer,
+            autostart: false,
+        },
         hooks: HooksConfig::default(),
     };
 

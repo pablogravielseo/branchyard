@@ -118,6 +118,7 @@ services:                        # Docker services — each gets isolated ports 
 
 terminal:
   multiplexer: warp              # warp | iterm2 | tmux | ghostty | none (default: none)
+  autostart: false               # when true, `branchyard serve` opens the terminal and runs serve commands automatically
 
 hooks:
   after_new:

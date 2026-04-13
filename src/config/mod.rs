@@ -113,10 +113,15 @@ pub struct ServiceConfig {
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct TerminalConfig {
     /// Terminal multiplexer to integrate with.
-    /// Supported: "warp", "iterm2", "none" (default)
+    /// Supported: "warp", "iterm2", "tmux", "ghostty", "none" (default)
     /// "none" — branchyard skips terminal setup entirely.
     #[serde(default)]
     pub multiplexer: Multiplexer,
+    /// When true, `branchyard serve` opens the terminal session and runs
+    /// each repo's serve command automatically.
+    /// When false (default), serve only starts Docker services.
+    #[serde(default)]
+    pub autostart: bool,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default, Clone, PartialEq)]
