@@ -57,6 +57,9 @@ services:
   # Full example with all available fields:
   - name: app
     image: my-app:latest
+    build: ./my-backend                        # build context relative to workspace root
+                                               # when set, Docker builds the image locally
+                                               # instead of pulling from a registry
     port: 3000
     command: "bundle exec rails s -p 3000 -b 0.0.0.0"
     env_file: ./my-backend/.env                # resolved relative to workspace root

@@ -107,6 +107,7 @@ pub fn run() -> Result<()> {
                     volumes: vec![],
                     env_file: None,
                     platform: None,
+                    build: None,
                 })
         })
         .collect();

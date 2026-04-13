@@ -83,6 +83,7 @@ services:                        # Docker services — each gets isolated ports 
 
   - name: web                    # app server — use for services with complex config
     image: my-app:latest
+    build: ./my-backend          # build context (relative to workspace root); builds locally instead of pulling
     port: 3000
     command: "bundle exec rails s -p 3000 -b 0.0.0.0"
     env_file: ./my-backend/.env  # resolved relative to workspace root

@@ -102,6 +102,12 @@ pub struct ServiceConfig {
     /// Platform override (e.g. "linux/amd64").
     #[serde(default)]
     pub platform: Option<String>,
+    /// Build context path (relative to workspace root). When set, Docker builds
+    /// the image locally instead of pulling from a registry.
+    /// Use alongside `image` to name the built image, or omit `image` to let
+    /// Docker Compose name it automatically.
+    #[serde(default)]
+    pub build: Option<String>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Default)]

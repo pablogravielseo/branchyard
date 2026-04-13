@@ -23,6 +23,10 @@ pub fn generate_override(
     for (i, svc) in config.services.iter().enumerate() {
         let host_port = ports.service_ports.get(i).copied().unwrap_or(svc.port);
         let _ = writeln!(out, "  {}:", svc.name);
+        if let Some(build_ctx) = &svc.build {
+            let resolved = workspace_root.join(build_ctx);
+            let _ = writeln!(out, "    build: {}", resolved.display());
+        }
         let _ = writeln!(out, "    image: {}", svc.image);
         let _ = writeln!(out, "    container_name: {slug}-{}", svc.name);
         if let Some(platform) = &svc.platform {
