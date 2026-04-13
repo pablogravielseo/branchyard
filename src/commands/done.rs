@@ -6,6 +6,41 @@ use crate::worktree;
 use anyhow::Result;
 use inquire::{Confirm, Select};
 use owo_colors::OwoColorize;
+use std::path::Path;
+
+/// Kill all processes whose working directory is inside the worktree directory.
+/// Uses `lsof` to find processes by cwd — works on macOS and Linux.
+fn kill_processes_in_dir(slug_dir: &Path) {
+    let dir_str = match slug_dir.to_str() {
+        Some(s) => s,
+        None => return,
+    };
+
+    // lsof -t -a +d <dir> lists PIDs of processes with cwd inside dir
+    let output = std::process::Command::new("lsof")
+        .args(["-t", "-a", "+d", dir_str])
+        .output();
+
+    let Ok(output) = output else { return };
+
+    let pids: Vec<u32> = String::from_utf8_lossy(&output.stdout)
+        .lines()
+        .filter_map(|l| l.trim().parse::<u32>().ok())
+        .collect();
+
+    if pids.is_empty() {
+        return;
+    }
+
+    for pid in &pids {
+        let _ = std::process::Command::new("kill")
+            .args(["-TERM", &pid.to_string()])
+            .status();
+    }
+
+    // Give processes a moment to exit gracefully before files are removed
+    std::thread::sleep(std::time::Duration::from_millis(500));
+}
 
 pub fn run_multi(slugs: Vec<String>, all: bool) -> Result<()> {
     let targets = if all {
@@ -111,6 +146,10 @@ pub fn run(slug: &str) -> Result<()> {
             return Ok(());
         }
     }
+
+    // ── Kill dev server processes running inside the worktree ─────────────────
+
+    kill_processes_in_dir(&slug_dir);
 
     // ── Stop Docker services ──────────────────────────────────────────────────
 
