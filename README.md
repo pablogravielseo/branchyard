@@ -54,6 +54,16 @@ branchyard done auth-jwt
 
 ---
 
+## Install
+
+```bash
+# macOS / Linux (curl installer)
+curl -fsSL https://github.com/pablogravielseo/branchyard/releases/latest/download/install.sh | sh
+
+# Via cargo
+cargo install branchyard
+```
+
 ## Setup
 
 Branchyard is stack-agnostic. It adapts to any project through a single configuration file — `.branchyard.yml` — that lives in your workspace root (the directory that contains all your repos). This file declares your repositories, Docker services, ports, and terminal integration. Branchyard reads it at runtime to know what to create, start, and tear down.
