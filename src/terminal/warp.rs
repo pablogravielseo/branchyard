@@ -49,10 +49,10 @@ impl TerminalIntegration for Warp {
 }
 
 fn config_path(slug: &str) -> std::path::PathBuf {
-    dirs::document_dir()
+    dirs::home_dir()
         .unwrap_or_else(|| std::path::PathBuf::from("."))
-        .join("Warp")
-        .join("Launch Configurations")
+        .join(".warp")
+        .join("launch_configurations")
         .join(format!("branchyard-{slug}.yaml"))
 }
 
