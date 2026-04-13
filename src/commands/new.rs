@@ -2,7 +2,6 @@ use anyhow::Result;
 use indicatif::{ProgressBar, ProgressStyle};
 use owo_colors::OwoColorize;
 use std::os::unix::fs::symlink;
-use std::path::PathBuf;
 use std::time::Duration;
 
 use crate::config::WtreeConfig;
@@ -74,7 +73,7 @@ pub fn run(branch: &str, slug: &str) -> Result<()> {
 
         // Symlinks declared in setup.symlinks
         for link in &repo.setup.symlinks {
-            let from = PathBuf::from(&link.from);
+            let from = workspace_root.join(&link.from);
             let to = worktree_path.join(&link.to);
 
             if let Some(parent) = to.parent() {
