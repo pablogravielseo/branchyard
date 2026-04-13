@@ -66,21 +66,24 @@ fn generate(
     let mut out = String::new();
     let _ = writeln!(out, "---");
     let _ = writeln!(out, "name: branchyard · {slug}");
-    let _ = writeln!(out, "tabs:");
+    let _ = writeln!(out, "windows:");
+    let _ = writeln!(out, "  - tabs:");
 
     for (i, repo) in config.repos.iter().enumerate() {
         let path = worktree_base.join(slug).join(&repo.name);
-        let _ = writeln!(out, "  - title: \"{} · {slug}\"", repo.name);
-        let _ = writeln!(out, "    directory: {}", path.display());
+        let _ = writeln!(out, "      - layout:");
+        let _ = writeln!(out, "          cwd: {}", path.display());
 
         if let Some(serve_cmd) = &repo.commands.serve {
-            let mut repo_vars = vars.clone();
-            if let Some(&port) = ports.repo_ports.get(i) {
-                repo_vars.insert("port".to_string(), port.to_string());
+            if !serve_cmd.is_empty() {
+                let mut repo_vars = vars.clone();
+                if let Some(&port) = ports.repo_ports.get(i) {
+                    repo_vars.insert("port".to_string(), port.to_string());
+                }
+                let cmd = interpolate(serve_cmd, &repo_vars);
+                let _ = writeln!(out, "          commands:");
+                let _ = writeln!(out, "            - exec: {cmd}");
             }
-            let cmd = interpolate(serve_cmd, &repo_vars);
-            let _ = writeln!(out, "    commands:");
-            let _ = writeln!(out, "      - {cmd}");
         }
     }
 
